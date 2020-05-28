@@ -1,0 +1,16 @@
+.split-pane-divider {
+    -fx-padding: 0 0.1em 0 0.1em;
+    -fx-background-color: transparent;
+}
+
+.split-pane {
+    -fx-focus-color: transparent;
+}
+
+.list-view {
+    -fx-focus-color: transparent;
+}
+
+.text-area {
+    -fx-focus-color: transparent;
+}
