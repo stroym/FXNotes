@@ -1,6 +1,6 @@
-package cz.papp.fxnotes;
+package cz.stroym.fxnotes;
 
-import cz.papp.fxnotes.util.DialogUtils;
+import cz.stroym.fxnotes.util.DialogUtils;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -34,7 +34,7 @@ public class FXNotesApplication extends Application {
     try {
       Parent root = FXMLLoader.load(getClass().getResource("/fxml/mainWindow.fxml"));
 
-      Scene scene = new Scene(root, 800, 500);
+      Scene scene = new Scene(root);
       stage.setTitle("FXNotes");
       stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
       stage.setScene(scene);

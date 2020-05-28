@@ -1,9 +1,10 @@
-package cz.papp.fxnotes.controller;
+package cz.stroym.fxnotes.controller;
 
-import cz.papp.fxnotes.model.Note;
-import cz.papp.fxnotes.model.Tag;
-import cz.papp.fxnotes.util.DataUtils;
-import cz.papp.fxnotes.util.DialogUtils;
+import cz.stroym.fxnotes.model.Note;
+import cz.stroym.fxnotes.model.Notebook;
+import cz.stroym.fxnotes.model.Tag;
+import cz.stroym.fxnotes.util.DataUtils;
+import cz.stroym.fxnotes.util.DialogUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -24,11 +25,13 @@ import java.util.stream.Collectors;
 
 public class MainController {
 
-  private static final ExtensionFilter      BINARY_FILTER = new ExtensionFilter("Binary files", "*.bin", "*.dat");
-  private static final ExtensionFilter      TEXT_FILTER   = new ExtensionFilter("Text files", "*.json", "*.txt");
-  private static final FileChooser          FILE_CHOOSER  = new FileChooser();
-  private static       ObservableList<Note> notes         = FXCollections.observableArrayList();
-  private static       ObservableList<Tag>  tags          = FXCollections.observableArrayList();
+  private static final ExtensionFilter      TEXT_FILTER  = new ExtensionFilter("Json files", "*.json", "*.JSON");
+  private static final FileChooser          FILE_CHOOSER = new FileChooser();
+
+  Notebook notebook = new Notebook();
+
+  private static       ObservableList<Note> notes        = FXCollections.observableArrayList();
+  private static       ObservableList<Tag>  tags         = FXCollections.observableArrayList();
   private static       File                 selectedFile;
 
   @FXML
@@ -49,6 +52,7 @@ public class MainController {
    */
   @FXML
   private void initialize() {
+    FILE_CHOOSER.getExtensionFilters().add(TEXT_FILTER);
     notesListView.setItems(notes);
     globalTagsListView.setItems(tags);
 
@@ -64,7 +68,7 @@ public class MainController {
     Note selected = getSelectedNote();
 
     if (selected != null) {
-      noteTextArea.setText(selected.getText());
+      noteTextArea.setText(selected.getContent());
       noteTagsListView.setItems(FXCollections.observableArrayList(selected.getTags()));
     }
   }
@@ -74,7 +78,7 @@ public class MainController {
    */
   @FXML
   private void editNoteText() {
-    getSelectedNote().setText(noteTextArea.getText());
+    getSelectedNote().setContent(noteTextArea.getText());
   }
 
   /**
@@ -103,7 +107,7 @@ public class MainController {
    */
   @FXML
   private void untagNote() {
-    getSelectedNote().untag(getSelectedNoteTag());
+    getSelectedNote().removeTag(getSelectedNoteTag());
     noteTagsListView.setItems(FXCollections.observableArrayList(getSelectedNote().getTags()));
   }
 
@@ -141,7 +145,7 @@ public class MainController {
     Tag selected = getSelectedGlobalTag();
 
     if (selected != null) {
-      notes.stream().filter(note -> note.getTags().contains(selected)).forEach(note -> note.untag(selected));
+      notes.stream().filter(note -> note.getTags().contains(selected)).forEach(note -> note.removeTag(selected));
       tags.remove(getSelectedGlobalTag());
     }
 
@@ -192,49 +196,6 @@ public class MainController {
 
       DataUtils.readJson(selectedFile, notes, tags);
 
-      //dirty, improve
-      for (Tag tag : tags) {
-        for (Note note : notes) {
-          for (Tag noteTag : note.getTags()) {
-            if (noteTag.equals(tag)) {
-              note.getTags().set(note.getTags().indexOf(noteTag), tag);
-            }
-          }
-        }
-      }
-
-      notesListView.setItems(notes);
-      globalTagsListView.setItems(tags);
-    } catch (IOException e) {
-      DialogUtils.generateError("An error has occurred!", "Couldn't read from file", e).showAndWait();
-    }
-  }
-
-  /**
-   * Handles importing from binary format.
-   */
-  @FXML
-  private void importFromBinary() {
-    try {
-      FILE_CHOOSER.getExtensionFilters().setAll(BINARY_FILTER);
-      selectedFile = FILE_CHOOSER.showOpenDialog(null);
-
-      notes = FXCollections.observableArrayList();
-      tags = FXCollections.observableArrayList();
-
-      DataUtils.readBinary(selectedFile, notes, tags);
-
-      //dirty, improve
-      for (Tag tag : tags) {
-        for (Note note : notes) {
-          for (Tag noteTag : note.getTags()) {
-            if (noteTag.equals(tag)) {
-              note.getTags().set(note.getTags().indexOf(noteTag), tag);
-            }
-          }
-        }
-      }
-
       notesListView.setItems(notes);
       globalTagsListView.setItems(tags);
     } catch (IOException e) {
@@ -253,7 +214,7 @@ public class MainController {
       }
 
       if (selectedFile != null) {
-        DataUtils.writeFile(selectedFile, new ArrayList<>(notes), new ArrayList<>(tags));
+        DataUtils.writeJson(selectedFile, new ArrayList<>(notes), new ArrayList<>(tags));
       } else {
         Alert alert = DialogUtils.generateWarning(null, "No file is currently selected!", null);
         alert.showAndWait();
@@ -268,37 +229,17 @@ public class MainController {
    */
   @FXML
   private void exportToJson() {
+    handleExport(FILE_CHOOSER.showSaveDialog(null));
+  }
+
+  private void handleExport(File file) {
     try {
       if (!isThereAnythingToSave()) {
         DialogUtils.generateInfo("Information", "Nothing to save", null).showAndWait();
       }
-
-      FILE_CHOOSER.getExtensionFilters().setAll(TEXT_FILTER);
-      File file = FILE_CHOOSER.showSaveDialog(null);
 
       statusLabel.setText("Saving to file " + file.getName());
       DataUtils.writeJson(file, new ArrayList<>(notes), new ArrayList<>(tags));
-      statusLabel.setText("");
-    } catch (IOException e) {
-      DialogUtils.generateError("An error has occurred!", "Couldn't write to file", e).showAndWait();
-    }
-  }
-
-  /**
-   * Handles exporting to binary format.
-   */
-  @FXML
-  private void exportToBinary() {
-    try {
-      if (!isThereAnythingToSave()) {
-        DialogUtils.generateInfo("Information", "Nothing to save", null).showAndWait();
-      }
-
-      FILE_CHOOSER.getExtensionFilters().setAll(BINARY_FILTER);
-      File file = FILE_CHOOSER.showSaveDialog(null);
-
-      statusLabel.setText("Saving to file " + file.getName());
-      DataUtils.writeBinary(file, new ArrayList<>(notes), new ArrayList<>(tags));
       statusLabel.setText("");
     } catch (IOException e) {
       DialogUtils.generateError("An error has occurred!", "Couldn't write to file", e).showAndWait();
@@ -351,7 +292,7 @@ public class MainController {
         @Override
         public Note fromString(String string) {
           Note selected = getSelectedNote();
-          selected.setTitle(string);
+          selected.setValue(string);
           return selected;
         }
       });
@@ -371,7 +312,7 @@ public class MainController {
         @Override
         public Tag fromString(String string) {
           Tag selected = getSelectedGlobalTag();
-          selected.setName(string);
+          selected.setValue(string);
           return selected;
         }
       });
@@ -388,7 +329,7 @@ public class MainController {
     globalTagsListView.setOnDragDetected(event -> {
       Dragboard        db      = globalTagsListView.startDragAndDrop(TransferMode.COPY);
       ClipboardContent content = new ClipboardContent();
-      content.putString(globalTagsListView.getSelectionModel().getSelectedItem().getName());
+      content.putString(globalTagsListView.getSelectionModel().getSelectedItem().getValue());
       db.setContent(content);
 
       event.consume();
@@ -402,39 +343,39 @@ public class MainController {
     a string is currently in the application clipboard;
     the currently selected note does not already contain the tag that is being added
      */
-    noteTagsListView.setOnDragOver(event -> {
-      if (notesListView.getSelectionModel().getSelectedItem() != null &&
-              event.getGestureSource() != event.getGestureTarget() &&
-              event.getDragboard().hasString() &&
-              !noteTagsListView.getItems().contains(new Tag(event.getDragboard().getString()))) {
-
-        event.acceptTransferModes(TransferMode.COPY);
-      }
-
-      event.consume();
-    });
+//    noteTagsListView.setOnDragOver(event -> {
+//      if (notesListView.getSelectionModel().getSelectedItem() != null &&
+//              event.getGestureSource() != event.getGestureTarget() &&
+//              event.getDragboard().hasString() &&
+//              !noteTagsListView.getItems().contains(new Tag(event.getDragboard().getString()))) {
+//
+//        event.acceptTransferModes(TransferMode.COPY);
+//      }
+//
+//      event.consume();
+//    });
 
     /*
     before a tag is added to a note, given that the data is being transported as a string,
     it's necessary to make sure such a tag actually exists - if it does and is not already present in a note,
     the drop is accepted and the noteTagsListView is refreshed
      */
-    noteTagsListView.setOnDragDropped(event -> {
-      Dragboard dragboard = event.getDragboard();
-
-      if (dragboard.hasString()) {
-        Tag tag = tags.stream().filter(t -> t.equals(new Tag(dragboard.getString()))).findFirst().orElse(null);
-
-        if (tag != null && !noteTagsListView.getItems().contains(tag)) {
-          Note selected = getSelectedNote();
-          selected.tag(tag);
-          noteTagsListView.setItems(FXCollections.observableArrayList(selected.getTags()));
-          event.setDropCompleted(true);
-        }
-      }
-
-      event.consume();
-    });
+//    noteTagsListView.setOnDragDropped(event -> {
+//      Dragboard dragboard = event.getDragboard();
+//
+//      if (dragboard.hasString()) {
+//        Tag tag = tags.stream().filter(t -> t.equals(new Tag(dragboard.getString()))).findFirst().orElse(null);
+//
+//        if (tag != null && !noteTagsListView.getItems().contains(tag)) {
+//          Note selected = getSelectedNote();
+//          selected.tag(tag);
+//          noteTagsListView.setItems(FXCollections.observableArrayList(selected.getTags()));
+//          event.setDropCompleted(true);
+//        }
+//      }
+//
+//      event.consume();
+//    });
   }
 
 }

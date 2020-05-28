@@ -1,6 +1,6 @@
-package cz.papp.fxnotes.util;
+package cz.stroym.fxnotes.util;
 
-import cz.papp.fxnotes.model.Tag;
+import cz.stroym.fxnotes.model.Tag;
 import javafx.application.Platform;
 import javafx.scene.control.*;
 
