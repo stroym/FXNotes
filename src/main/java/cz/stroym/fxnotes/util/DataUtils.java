@@ -5,12 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import cz.stroym.fxnotes.model.Note;
+import cz.stroym.fxnotes.model.Notebook;
 import cz.stroym.fxnotes.model.Tag;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,14 +20,7 @@ public class DataUtils {
   private static final ObjectReader READER = new ObjectMapper().reader();
   private static final ObjectMapper MAPPER = new ObjectMapper();
 
-  /**
-   * Loads application data from a json file.
-   *
-   * @param file  file to read
-   * @param notes parsed notes target
-   * @param tags  parsed tags target
-   * @throws IOException thrown when something goes wrong when reading the <code>file</code>
-   */
+//TODO update
   public static void readJson(File file, List<Note> notes, List<Tag> tags) throws IOException {
     Map<String, List<?>> readMap = READER.readValue(file, HashMap.class);
     //TODO check/catch if file is a valid json, doing it by extension is meh
@@ -39,21 +31,14 @@ public class DataUtils {
     }));
   }
 
-  /**
-   * Saves application data to a json file.
-   *
-   * @param file  file to write to
-   * @param notes parsed notes source
-   * @param tags  parsed tags source
-   * @throws IOException thrown when something goes wrong when writing to the <code>file</code>
-   */
-  public static void writeJson(File file, List<Note> notes, List<Tag> tags) throws IOException {
-    JSONObject writeJson = new JSONObject() {{
-      put("notes", new ArrayList<>(notes));
-      put("tags", new ArrayList<>(tags));
-    }};
+  //TODO update, possibly custom de/serializer
+  public static void writeJson(File file, Notebook notebook) throws IOException {
+//    JSONObject writeJson = new JSONObject() {{
+//      put("notes", new ArrayList<>(notes));
+//      put("tags", new ArrayList<>(tags));
+//    }};
 
-    WRITER.writeValue(file, writeJson.toMap());
+//    WRITER.writeValue(file, writeJson.toMap());
   }
 
 }

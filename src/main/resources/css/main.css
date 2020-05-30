@@ -1,7 +1,16 @@
-.list-view {
-    -fx-focus-color: transparent;
+.list-view:focused,
+.text-area:focused {
+    -fx-background-color: -fx-box-border, -fx-control-inner-background;
+    -fx-background-insets: 0, 1;
+    -fx-padding: 1;
 }
 
-.text-area {
-    -fx-focus-color: transparent;
+.menu,
+.menu-item {
+    -fx-padding: 1 5 1 5;
+}
+
+.menu-bar {
+    -fx-padding: 0 1 0 1;
+    -fx-spacing: 1;
 }

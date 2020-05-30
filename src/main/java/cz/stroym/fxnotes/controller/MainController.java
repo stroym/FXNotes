@@ -2,13 +2,15 @@ package cz.stroym.fxnotes.controller;
 
 import cz.stroym.fxnotes.model.Note;
 import cz.stroym.fxnotes.model.Notebook;
+import cz.stroym.fxnotes.model.Section;
 import cz.stroym.fxnotes.model.Tag;
 import cz.stroym.fxnotes.util.DataUtils;
 import cz.stroym.fxnotes.util.DialogUtils;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import cz.stroym.fxnotes.util.FXUtils;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
@@ -16,217 +18,133 @@ import javafx.scene.input.TransferMode;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.StringConverter;
+import lombok.SneakyThrows;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.stream.Collectors;
 
 public class MainController {
 
-  private static final ExtensionFilter      TEXT_FILTER  = new ExtensionFilter("Json files", "*.json", "*.JSON");
-  private static final FileChooser          FILE_CHOOSER = new FileChooser();
+  private static final ExtensionFilter TEXT_FILTER  = new ExtensionFilter("Json files", "*.json", "*.JSON");
+  private static final FileChooser     FILE_CHOOSER = new FileChooser();
+  private static       File            selectedFile;
 
-  Notebook notebook = new Notebook();
-
-  private static       ObservableList<Note> notes        = FXCollections.observableArrayList();
-  private static       ObservableList<Tag>  tags         = FXCollections.observableArrayList();
-  private static       File                 selectedFile;
+  private static Notebook notebook = new Notebook();
 
   @FXML
-  private ListView<Note> notesListView;
+  private ListView<Note>    notesView;
   @FXML
-  private ListView<Tag>  noteTagsListView;
+  private ListView<Section> sectionsView;
   @FXML
-  private ListView<Tag>  globalTagsListView;
+  private ListView<Tag>     tagsView;
 
   @FXML
   private TextArea noteTextArea;
-
-  @FXML
-  private Label statusLabel;
 
   /**
    * Initializes the application after it starts.
    */
   @FXML
   private void initialize() {
+    //TODO init notebook from preferences
+
     FILE_CHOOSER.getExtensionFilters().add(TEXT_FILTER);
-    notesListView.setItems(notes);
-    globalTagsListView.setItems(tags);
+    notesView.setItems(notebook.getDefaultSection().getObservableNotes());
+    tagsView.setItems(notebook.getObservableTags());
 
     setupDragAndDrop();
     setupEditableListViews();
   }
 
-  /**
-   * Handles clicks on {@link MainController#notesListView}. Serves as a selector.
-   */
   @FXML
   private void noteListViewLeftClick() {
-    Note selected = getSelectedNote();
-
-    if (selected != null) {
-      noteTextArea.setText(selected.getContent());
-      noteTagsListView.setItems(FXCollections.observableArrayList(selected.getTags()));
-    }
+    noteTextArea.setText(getSelectedNote().getContent());
   }
 
-  /**
-   * Updates the currently selected {@link Note Note's} text.
-   */
   @FXML
   private void editNoteText() {
     getSelectedNote().setContent(noteTextArea.getText());
   }
 
-  /**
-   * Handles adding new {@link Note}.
-   */
   @FXML
   private void addNote() {
-    notes.add(new Note());
+    getSelectedSection().addNote(new Note());
 
-    notesListView.layout();
-    notesListView.getSelectionModel().selectLast();
-    notesListView.edit(notesListView.getSelectionModel().getSelectedIndex());
-    notesListView.scrollTo(notesListView.getSelectionModel().getSelectedIndex());
+    notesView.layout();
+    notesView.getSelectionModel().selectLast();
+    notesView.edit(notesView.getSelectionModel().getSelectedIndex());
+    notesView.scrollTo(notesView.getSelectionModel().getSelectedIndex());
   }
 
-  /**
-   * Handles deleting {@link Note}.
-   */
   @FXML
   private void deleteNote() {
-    notes.remove(notesListView.getSelectionModel().getSelectedItem());
+    getSelectedSection().getNotes().remove(getSelectedNote());
   }
 
-  /**
-   * Handles removing a {@link Tag} from a {@link Note}.
-   */
   @FXML
   private void untagNote() {
-    getSelectedNote().removeTag(getSelectedNoteTag());
-    noteTagsListView.setItems(FXCollections.observableArrayList(getSelectedNote().getTags()));
+    getSelectedNote().removeTag(getSelectedTag());
   }
 
-  /**
-   * Handles the adding of a new {@link Tag}.
-   */
   @FXML
   private void addTag() {
-    tags.add(new Tag());
+    notebook.addTag(new Tag());
 
-    globalTagsListView.layout();
-    globalTagsListView.getSelectionModel().selectLast();
-    globalTagsListView.edit(globalTagsListView.getSelectionModel().getSelectedIndex());
-    globalTagsListView.scrollTo(globalTagsListView.getSelectionModel().getSelectedIndex());
+    tagsView.layout();
+    tagsView.getSelectionModel().selectLast();
+    tagsView.edit(tagsView.getSelectionModel().getSelectedIndex());
+    tagsView.scrollTo(tagsView.getSelectionModel().getSelectedIndex());
   }
 
-  /**
-   * Handles resorting {@link MainController#globalTagsListView} and
-   * refreshing the {@link MainController#noteTagsListView} after a {@link Tag} is edited.
-   */
-  @FXML
-  private void commitTagEdit() {
-    Collections.sort(tags);
-
-    if (getSelectedNote() != null) {
-      noteTagsListView.setItems(FXCollections.observableArrayList(getSelectedNote().getTags()));
-    }
-  }
-
-  /**
-   * Handles deleting a {@link Tag}.
-   */
-  @FXML
-  private void deleteTag() {
-    Tag selected = getSelectedGlobalTag();
-
-    if (selected != null) {
-      notes.stream().filter(note -> note.getTags().contains(selected)).forEach(note -> note.removeTag(selected));
-      tags.remove(getSelectedGlobalTag());
-    }
-
-    if (getSelectedNote() != null) {
-      noteTagsListView.setItems(FXCollections.observableArrayList(getSelectedNote().getTags()));
-    }
-  }
-
-  /**
-   * Displays all {@link Note Notes}.
-   */
   @FXML
   private void showAll() {
-    notesListView.getSelectionModel().select(-1);
+    sectionsView.getSelectionModel().select(-1);
+    notesView.getSelectionModel().select(-1);
     noteTextArea.setText("");
-    noteTagsListView.setItems(null);
-    notesListView.setItems(notes);
+    sectionsView.setItems(notebook.getObservableSections());
+    notesView.setItems(null);
   }
 
-  /**
-   * Displays only {@link Note Notes} that have a specified {@link Tag}.
-   */
-  @FXML
-  private void showTagged() {
-    ChoiceDialog<Tag> dialog = DialogUtils.generateTagChoiceDialog("Choose a tag", null, null, tags);
-    dialog.showAndWait();
-    Tag filterTag = dialog.getResult();
+  //TODO
+//  @FXML
+//  private void showTagged() {
+//    ChoiceDialog<Tag> dialog = DialogUtils.generateTagChoiceDialog("Choose a tag", null, null, tags);
+//    dialog.showAndWait();
+//    Tag filterTag = dialog.getResult();
+//
+//    if (filterTag != null) {
+//      notesListView.getSelectionModel().select(-1);
+//      noteTextArea.setText("");
+//      sectionListView.setItems(null);
+//      notesListView.setItems(FXCollections.observableArrayList(notes.stream().filter(note -> note.getTags().contains(filterTag)).collect(Collectors.toList())));
+//    }
+//  }
 
-    if (filterTag != null) {
-      notesListView.getSelectionModel().select(-1);
-      noteTextArea.setText("");
-      noteTagsListView.setItems(null);
-      notesListView.setItems(FXCollections.observableArrayList(notes.stream().filter(note -> note.getTags().contains(filterTag)).collect(Collectors.toList())));
-    }
-  }
-
-  /**
-   * Handles importing from text (json) format.
-   */
+  //TODO
   @FXML
   private void importFromJson() {
-    try {
-      FILE_CHOOSER.getExtensionFilters().setAll(TEXT_FILTER);
-      selectedFile = FILE_CHOOSER.showOpenDialog(null);
-
-      notes = FXCollections.observableArrayList();
-      tags = FXCollections.observableArrayList();
-
-      DataUtils.readJson(selectedFile, notes, tags);
-
-      notesListView.setItems(notes);
-      globalTagsListView.setItems(tags);
-    } catch (IOException e) {
-      DialogUtils.generateError("An error has occurred!", "Couldn't read from file", e).showAndWait();
-    }
+//    try {
+//
+////      FILE_CHOOSER.getExtensionFilters().setAll(TEXT_FILTER);
+////      selectedFile = FILE_CHOOSER.showOpenDialog(null);
+////
+////      notes = FXCollections.observableArrayList();
+////      tags = FXCollections.observableArrayList();
+////
+////      DataUtils.readJson(selectedFile, notes, tags);
+////
+////      notesListView.setItems(notes);
+////      tagsListView.setItems(tags);
+//    } catch (IOException e) {
+//      DialogUtils.generateError("An error has occurred!", "Couldn't read from file", e).showAndWait();
+//    }
   }
 
-  /**
-   * Saves current application data to the data file that was last loaded.
-   */
   @FXML
   private void saveToCurrentFile() {
-    try {
-      if (!isThereAnythingToSave()) {
-        DialogUtils.generateInfo("Information", "Nothing to save", null).showAndWait();
-      }
-
-      if (selectedFile != null) {
-        DataUtils.writeJson(selectedFile, new ArrayList<>(notes), new ArrayList<>(tags));
-      } else {
-        Alert alert = DialogUtils.generateWarning(null, "No file is currently selected!", null);
-        alert.showAndWait();
-      }
-    } catch (IOException e) {
-      DialogUtils.generateError("An error has occurred!", "Couldn't save to file", e).showAndWait();
-    }
+    handleExport(selectedFile);
   }
 
-  /**
-   * Handles exporting to text (json) format.
-   */
   @FXML
   private void exportToJson() {
     handleExport(FILE_CHOOSER.showSaveDialog(null));
@@ -234,44 +152,29 @@ public class MainController {
 
   private void handleExport(File file) {
     try {
-      if (!isThereAnythingToSave()) {
+      if (notebook.getSections().isEmpty()) {
         DialogUtils.generateInfo("Information", "Nothing to save", null).showAndWait();
       }
 
-      statusLabel.setText("Saving to file " + file.getName());
-      DataUtils.writeJson(file, new ArrayList<>(notes), new ArrayList<>(tags));
-      statusLabel.setText("");
+      DataUtils.writeJson(file, notebook);
     } catch (IOException e) {
       DialogUtils.generateError("An error has occurred!", "Couldn't write to file", e).showAndWait();
     }
   }
 
-  /**
-   * Checks if there's anything to save.
-   */
-  private boolean isThereAnythingToSave() {
-    return notes.size() > 0 || tags.size() > 0;
-  }
-
-  /**
-   * Shortcut method to get the currently selected {@link Note}.
-   */
+  @SneakyThrows(InvalidSelectionException.class)
   private Note getSelectedNote() {
-    return notesListView.getSelectionModel().getSelectedItem();
+    return (Note) FXUtils.getSelected(notesView);
   }
 
-  /**
-   * Shortcut method to get the currently selected {@link Note Note's} {@link Tag}.
-   */
-  private Tag getSelectedNoteTag() {
-    return noteTagsListView.getSelectionModel().getSelectedItem();
+  @SneakyThrows(InvalidSelectionException.class)
+  private Section getSelectedSection() {
+    return (Section) FXUtils.getSelected(sectionsView);
   }
 
-  /**
-   * Shortcut method to get the currently selected global {@link Tag}.
-   */
-  private Tag getSelectedGlobalTag() {
-    return globalTagsListView.getSelectionModel().getSelectedItem();
+  @SneakyThrows(InvalidSelectionException.class)
+  private Tag getSelectedTag() {
+    return (Tag) FXUtils.getSelected(tagsView);
   }
 
   /**
@@ -280,7 +183,7 @@ public class MainController {
    * and also the ability to change an object's name.
    */
   private void setupEditableListViews() {
-    notesListView.setCellFactory(lv -> {
+    notesView.setCellFactory(lv -> {
       TextFieldListCell<Note> cell = new TextFieldListCell<>();
 
       cell.setConverter(new StringConverter<>() {
@@ -300,7 +203,7 @@ public class MainController {
       return cell;
     });
 
-    globalTagsListView.setCellFactory(lv -> {
+    tagsView.setCellFactory(lv -> {
       TextFieldListCell<Tag> cell = new TextFieldListCell<>();
 
       cell.setConverter(new StringConverter<>() {
@@ -311,7 +214,7 @@ public class MainController {
 
         @Override
         public Tag fromString(String string) {
-          Tag selected = getSelectedGlobalTag();
+          Tag selected = getSelectedTag();
           selected.setValue(string);
           return selected;
         }
@@ -326,10 +229,10 @@ public class MainController {
    */
   private void setupDragAndDrop() {
     //copy from source to application clipboard
-    globalTagsListView.setOnDragDetected(event -> {
-      Dragboard        db      = globalTagsListView.startDragAndDrop(TransferMode.COPY);
+    tagsView.setOnDragDetected(event -> {
+      Dragboard        db      = tagsView.startDragAndDrop(TransferMode.COPY);
       ClipboardContent content = new ClipboardContent();
-      content.putString(globalTagsListView.getSelectionModel().getSelectedItem().getValue());
+      content.putString(tagsView.getSelectionModel().getSelectedItem().getValue());
       db.setContent(content);
 
       event.consume();

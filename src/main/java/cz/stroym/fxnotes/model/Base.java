@@ -8,13 +8,22 @@ import java.io.Serializable;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(of = "value")
-public abstract class Base implements Serializable {
+public abstract class Base implements Serializable, Comparable<Base> {
 
   @JsonTypeId
   protected long id;
 
   @Setter
   protected String value = "";
+
+  @Override
+  public int compareTo(Base o) {
+    return this.value.compareTo(o.value);
+  }
+
+  @Override
+  public String toString() {
+    return value;
+  }
 
 }

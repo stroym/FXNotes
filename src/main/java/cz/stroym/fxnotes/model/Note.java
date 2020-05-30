@@ -3,10 +3,7 @@ package cz.stroym.fxnotes.model;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -17,8 +14,8 @@ import java.util.TreeSet;
 @NoArgsConstructor
 public class Note extends Base {
 
-  private String content = "";
-
+  private String  content  = "";
+  private long    userOrder;
   private boolean archived = false;
 
   @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")

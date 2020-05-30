@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Tag extends Base implements Comparable<Tag> {
+public class Tag extends Base {
 
   @Override
   public boolean equals(Object o) {
@@ -21,9 +21,6 @@ public class Tag extends Base implements Comparable<Tag> {
     return this.value.equals(tag.value);
   }
 
-  @Override
-  public int compareTo(Tag tag) {
-    return this.value.compareTo(tag.value);
-  }
+  //TODO tag groups for organization...
 
 }

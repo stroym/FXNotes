@@ -80,7 +80,7 @@
                                     <content>
                                         <AnchorPane>
                                             <children>
-                                                <ListView fx:id="notesListView" editable="true" onMouseClicked="#noteListViewLeftClick" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                <ListView fx:id="notesView" editable="true" onMouseClicked="#noteListViewLeftClick" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                     <contextMenu>
                                                         <ContextMenu>
                                                             <items>
@@ -114,7 +114,7 @@
                             <content>
                                 <AnchorPane>
                                     <children>
-                                        <ListView fx:id="noteTagsListView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <ListView fx:id="sectionsView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <contextMenu>
                                                 <ContextMenu>
                                                     <items>
@@ -135,7 +135,7 @@
                             <content>
                                 <AnchorPane>
                                     <children>
-                                        <ListView fx:id="globalTagsListView" editable="true" onEditCommit="#commitTagEdit" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                        <ListView fx:id="tagsView" editable="true" onEditCommit="#commitTagEdit" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <contextMenu>
                                                 <ContextMenu>
                                                     <items>
