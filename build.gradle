@@ -11,7 +11,6 @@ plugins {
 
 group 'cz.stroym.fxnotes'
 mainClassName = group + '.FXNotesApplication'
-//mainClassName =  "$moduleName/cz.stroym.fxnotes.FXNotesApplication"
 version '0.0.1'
 
 sourceCompatibility = JavaVersion.VERSION_11

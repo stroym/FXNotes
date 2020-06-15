@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane minHeight="700.0" minWidth="1000.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.stroym.fxnotes.controller.MainController">
+<GridPane minHeight="700.0" minWidth="1000.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: gray;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.stroym.fxnotes.controller.MainController">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="150.0" prefWidth="150.0" />
@@ -29,7 +29,7 @@
       <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="NEVER" />
    </rowConstraints>
    <children>
-      <MenuBar fx:id="menu" GridPane.columnSpan="2147483647" GridPane.halignment="LEFT" GridPane.valignment="TOP">
+      <MenuBar fx:id="menu" style="-fx-background-color: gray;" GridPane.columnSpan="2147483647" GridPane.halignment="LEFT" GridPane.valignment="TOP">
          <menus>
             <Menu mnemonicParsing="false" text="File">
                <items>
