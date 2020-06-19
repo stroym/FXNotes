@@ -14,3 +14,13 @@
     -fx-padding: 0 1 0 1;
     -fx-spacing: 1;
 }
+
+.hide-toggle-button{
+  -fx-background-color: transparent;
+  -fx-padding: 0px;
+  -fx-border-color: black;
+}
+
+.auto-complete-text-field{
+  -fx-border-radius: 10px;
+}

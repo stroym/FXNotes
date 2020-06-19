@@ -50,7 +50,9 @@ public class MainController {
     notesView.setItems(notebook.getDefaultSection().getObservableNotes());
     tagsView.setItems(notebook.getObservableTags());
     
-    registerEmptyListViewClickConsumers();
+    //TODO "zatahovací" sekce/poznamky a tagy (zprava)
+    
+   // registerEmptyListViewClickConsumers();
     setupDragAndDrop();
     setupEditableListViews();
   }
