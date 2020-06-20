@@ -29,14 +29,12 @@ public class FXNotesApplication extends Application {
       Parent root = FXMLLoader.load(getClass().getResource("/fxml/mainWindow.fxml"));
       
       Scene scene = new Scene(root);
-      scene.getStylesheets()
-           .addAll(getClass().getResource("/css/main.css")
-                             .toExternalForm(), getClass().getResource("/css/scrollbar.css")
-                                                          .toExternalForm());
-      
+      scene.getStylesheets().addAll(getClass().getResource("/css/main.css").toExternalForm(),
+                                    getClass().getResource("/css/scrollbar.css").toExternalForm()
+      );
+
       stage.setTitle("FXNotes");
-      stage.getIcons()
-           .add(new Image(getClass().getResourceAsStream("/icon.png")));
+      stage.getIcons().add(new Image(getClass().getResourceAsStream("/icon.png")));
       stage.setScene(scene);
       stage.show();
     } catch (Throwable t) {

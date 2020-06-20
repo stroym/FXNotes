@@ -1,5 +1,6 @@
 package cz.stroym.fxnotes.controller;
 
+import cz.stroym.controls.AutocompleteTextField;
 import cz.stroym.fxnotes.model.Note;
 import cz.stroym.fxnotes.model.Notebook;
 import cz.stroym.fxnotes.model.Section;
@@ -14,12 +15,14 @@ import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.StringConverter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class MainController {
   
@@ -34,11 +37,17 @@ public class MainController {
   private static Notebook notebook = new Notebook();
   
   @FXML
+  private GridPane rootControl;
+  
+  @FXML
   private ListView<Note>    notesView;
   @FXML
   private ListView<Section> sectionsView;
   @FXML
   private ListView<Tag>     tagsView;
+  
+  @FXML
+  private AutocompleteTextField<String> tagsTextField;
   
   @FXML
   private TextArea noteTextArea;
@@ -50,9 +59,9 @@ public class MainController {
     notesView.setItems(notebook.getDefaultSection().getObservableNotes());
     tagsView.setItems(notebook.getObservableTags());
     
-    //TODO "zatahovací" sekce/poznamky a tagy (zprava)
+    tagsTextField.getEntries().addAll(Arrays.asList("bob", "blob", "ahoj", "beep boop"));
     
-   // registerEmptyListViewClickConsumers();
+    // registerEmptyListViewClickConsumers();
     setupDragAndDrop();
     setupEditableListViews();
   }

@@ -12,5 +12,6 @@ module fxnotes {
   
   exports cz.stroym.fxnotes to javafx.graphics;
   exports cz.stroym.fxnotes.controller;
+  exports cz.stroym.controls;
   
 }
