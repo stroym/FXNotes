@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import cz.stroym.fxcontrols.control.AutocompleteTextField?>
+<?import cz.stroym.fxcontrols.control.SearchableListView?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.CheckMenuItem?>
@@ -19,79 +21,76 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<?import cz.stroym.controls.AutocompleteTextField?>
-
-<GridPane fx:id="rootControl" minHeight="700.0" minWidth="1000.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="700.0"
-          prefWidth="1000.0" style="-fx-background-color: lightgray;" xmlns="http://javafx.com/javafx/11.0.0"
-          xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.stroym.fxnotes.controller.MainController">
+<?import cz.stroym.fxcontrols.control.AutocompleteTextField?>
+<?import cz.stroym.fxcontrols.control.SearchableListView?>
+<GridPane fx:id="rootControl" minHeight="700.0" minWidth="1000.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: lightgray;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cz.stroym.fxnotes.controller.MainController">
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="50.0" prefWidth="100.0"/>
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="50.0" prefWidth="100.0"/>
-    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="400.0"/>
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="50.0" prefWidth="100.0"/>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="50.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="50.0" prefWidth="100.0" />
+    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="400.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="150.0" minWidth="50.0" prefWidth="100.0" />
   </columnConstraints>
   <rowConstraints>
-    <RowConstraints maxHeight="20.0" minHeight="20.0" vgrow="SOMETIMES"/>
-    <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0"/>
-    <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES"/>
-    <RowConstraints vgrow="SOMETIMES"/>
-    <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="NEVER"/>
+    <RowConstraints maxHeight="20.0" minHeight="20.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="15.0" minHeight="15.0" prefHeight="15.0" />
+    <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+    <RowConstraints vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="NEVER" />
   </rowConstraints>
   <children>
-    <MenuBar fx:id="menu" style="-fx-background-color: gray;" GridPane.columnSpan="2147483647"
-             GridPane.halignment="LEFT" GridPane.valignment="TOP">
+    <MenuBar fx:id="menu" style="-fx-background-color: gray;" GridPane.columnSpan="2147483647" GridPane.halignment="LEFT" GridPane.valignment="TOP">
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#saveToCurrentFile" text="New"/>
-            <SeparatorMenuItem mnemonicParsing="false"/>
-            <MenuItem mnemonicParsing="false" onAction="#importFromJson" text="Open..."/>
-            <Menu mnemonicParsing="false" text="Open recent"/>
-            <SeparatorMenuItem mnemonicParsing="false"/>
-            <MenuItem mnemonicParsing="false" onAction="#exportToJson" text="Save"/>
-            <MenuItem mnemonicParsing="false" onAction="#saveToCurrentFile" text="Save as..."/>
-            <SeparatorMenuItem mnemonicParsing="false"/>
-            <MenuItem mnemonicParsing="false" onAction="#saveToCurrentFile" text="Preferences"/>
-            <SeparatorMenuItem mnemonicParsing="false"/>
-            <MenuItem mnemonicParsing="false" onAction="#saveToCurrentFile" text="Save and exit"/>
-            <MenuItem mnemonicParsing="false" onAction="#saveToCurrentFile" text="Exit"/>
+            <MenuItem mnemonicParsing="false" onAction="#saveToCurrentFile" text="New" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" onAction="#importFromJson" text="Open..." />
+            <Menu mnemonicParsing="false" text="Open recent" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" onAction="#exportToJson" text="Save" />
+            <MenuItem mnemonicParsing="false" onAction="#saveToCurrentFile" text="Save as..." />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" onAction="#saveToCurrentFile" text="Preferences" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" onAction="#saveToCurrentFile" text="Save and exit" />
+            <MenuItem mnemonicParsing="false" onAction="#saveToCurrentFile" text="Exit" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">
           <items>
-            <MenuItem mnemonicParsing="false" text="Action 1"/>
+            <MenuItem mnemonicParsing="false" text="Action 1" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Filter">
           <items>
-            <MenuItem mnemonicParsing="false" text="Show filter dialog"/>
-            <MenuItem mnemonicParsing="false" text="Reset all filters"/>
-            <CheckMenuItem mnemonicParsing="false" text="Show archived"/>
-            <SeparatorMenuItem mnemonicParsing="false"/>
+            <MenuItem mnemonicParsing="false" text="Show filter dialog" />
+            <MenuItem mnemonicParsing="false" text="Reset all filters" />
+            <CheckMenuItem mnemonicParsing="false" text="Show archived" />
+            <SeparatorMenuItem mnemonicParsing="false" />
             <Menu fx:id="menuFilterState" mnemonicParsing="false" text="States">
               <items>
-                <MenuItem mnemonicParsing="false" text="Deselect all"/>
-                <MenuItem mnemonicParsing="false" text="Select all"/>
-                <SeparatorMenuItem mnemonicParsing="false"/>
+                <MenuItem mnemonicParsing="false" text="Deselect all" />
+                <MenuItem mnemonicParsing="false" text="Select all" />
+                <SeparatorMenuItem mnemonicParsing="false" />
               </items>
             </Menu>
-            <Menu fx:id="menuFilterTag" mnemonicParsing="false" text="Tags"/>
-            <MenuItem mnemonicParsing="false" text="Deselect all"/>
-            <MenuItem mnemonicParsing="false" text="Select all"/>
-            <SeparatorMenuItem mnemonicParsing="false"/>
+            <Menu fx:id="menuFilterTag" mnemonicParsing="false" text="Tags" />
+            <MenuItem mnemonicParsing="false" text="Deselect all" />
+            <MenuItem mnemonicParsing="false" text="Select all" />
+            <SeparatorMenuItem mnemonicParsing="false" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help">
           <items>
-            <MenuItem mnemonicParsing="false" text="About FXNotes"/>
+            <MenuItem mnemonicParsing="false" text="About FXNotes" />
           </items>
         </Menu>
       </menus>
       <GridPane.margin>
-        <Insets left="-5.0" right="-5.0"/>
+        <Insets left="-5.0" right="-5.0" />
       </GridPane.margin>
       <padding>
-        <Insets left="-5.0"/>
+        <Insets left="-5.0" />
       </padding>
     </MenuBar>
     <ListView fx:id="notesView" editable="true" onMouseClicked="#noteListViewLeftClick" GridPane.rowIndex="3">
@@ -100,11 +99,11 @@
           <items>
             <Menu mnemonicParsing="false" text="Unspecified Menu">
               <items>
-                <MenuItem mnemonicParsing="false" text="Action 1"/>
+                <MenuItem mnemonicParsing="false" text="Action 1" />
               </items>
             </Menu>
-            <MenuItem fx:id="newNoteItem" mnemonicParsing="false" onAction="#addNote" text="Add"/>
-            <MenuItem mnemonicParsing="false" onAction="#deleteNote" text="Delete"/>
+            <MenuItem fx:id="newNoteItem" mnemonicParsing="false" onAction="#addNote" text="Add" />
+            <MenuItem mnemonicParsing="false" onAction="#deleteNote" text="Delete" />
           </items>
         </ContextMenu>
       </contextMenu>
@@ -113,108 +112,81 @@
       <contextMenu>
         <ContextMenu>
           <items>
-            <MenuItem mnemonicParsing="false" onAction="#addTag" text="Add"/>
-            <MenuItem mnemonicParsing="false" text="Delete"/>
+            <MenuItem mnemonicParsing="false" onAction="#addTag" text="Add" />
+            <MenuItem mnemonicParsing="false" text="Delete" />
           </items>
         </ContextMenu>
       </contextMenu>
     </ListView>
-    <TextArea fx:id="noteTextArea" onKeyTyped="#editNoteText" wrapText="true" GridPane.columnIndex="2"
-              GridPane.rowIndex="3">
+    <TextArea fx:id="noteTextArea" onKeyTyped="#editNoteText" wrapText="true" GridPane.columnIndex="2" GridPane.rowIndex="3">
       <GridPane.margin>
-        <Insets/>
+        <Insets />
       </GridPane.margin>
     </TextArea>
     <AnchorPane GridPane.columnIndex="3" GridPane.rowIndex="3">
       <children>
-        <ListView AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                  AnchorPane.topAnchor="0.0"/>
+        <ListView AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
       </children>
     </AnchorPane>
-    <ToggleButton fx:id="hideTagsButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" scaleShape="false"
-                  style="-fx-: 0;" styleClass="hide-toggle-button" text="&gt;" textAlignment="CENTER"
-                  GridPane.columnIndex="3" GridPane.rowIndex="1">
+    <ToggleButton fx:id="hideTagsButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" scaleShape="false" style="-fx-: 0;" styleClass="hide-toggle-button" text="&gt;" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="1">
       <font>
-        <Font size="15.0"/>
+        <Font size="15.0" />
       </font>
     </ToggleButton>
-    <HBox id="HBox" alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="1000.0" spacing="5.0"
-          GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+    <HBox id="HBox" alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="1000.0" spacing="5.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
       <children>
-        <ProgressBar prefWidth="300.0" progress="0.0"/>
+        <ProgressBar prefWidth="300.0" progress="0.0" />
       </children>
       <padding>
-        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0"/>
+        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
       </padding>
     </HBox>
-    <ToggleButton fx:id="hideTagsButton1" maxWidth="1.7976931348623157E308" mnemonicParsing="false" scaleShape="false"
-                  styleClass="hide-toggle-button" text="&lt;" textAlignment="CENTER" GridPane.rowIndex="1">
+    <ToggleButton fx:id="hideTagsButton1" maxWidth="1.7976931348623157E308" mnemonicParsing="false" scaleShape="false" styleClass="hide-toggle-button" text="&lt;" textAlignment="CENTER" GridPane.rowIndex="1">
       <font>
-        <Font size="15.0"/>
+        <Font size="15.0" />
       </font>
     </ToggleButton>
-    <ToggleButton fx:id="hideTagsButton11" maxWidth="1.7976931348623157E308" mnemonicParsing="false" scaleShape="false"
-                  styleClass="hide-toggle-button" text="&lt;" textAlignment="CENTER" GridPane.columnIndex="1"
-                  GridPane.rowIndex="1">
+    <ToggleButton fx:id="hideTagsButton11" maxWidth="1.7976931348623157E308" mnemonicParsing="false" scaleShape="false" styleClass="hide-toggle-button" text="&lt;" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
       <font>
-        <Font size="15.0"/>
+        <Font size="15.0" />
       </font>
     </ToggleButton>
     <HBox GridPane.columnIndex="2" GridPane.rowIndex="2">
       <children>
-        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle"
-                      HBox.hgrow="ALWAYS">
+        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle" HBox.hgrow="ALWAYS">
           <HBox.margin>
-            <Insets/>
+            <Insets />
           </HBox.margin>
         </ToggleButton>
-        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle"
-                      HBox.hgrow="ALWAYS"/>
-        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle"
-                      HBox.hgrow="ALWAYS"/>
-        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle"
-                      HBox.hgrow="ALWAYS"/>
-        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle"
-                      HBox.hgrow="ALWAYS"/>
-        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle"
-                      HBox.hgrow="ALWAYS"/>
-        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle"
-                      HBox.hgrow="ALWAYS"/>
-        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle"
-                      HBox.hgrow="ALWAYS"/>
-        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle"
-                      HBox.hgrow="ALWAYS"/>
-        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle"
-                      HBox.hgrow="ALWAYS"/>
-        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle"
-                      HBox.hgrow="ALWAYS"/>
-        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle"
-                      HBox.hgrow="ALWAYS"/>
-        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle"
-                      HBox.hgrow="ALWAYS"/>
-        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle"
-                      HBox.hgrow="ALWAYS"/>
-        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle"
-                      HBox.hgrow="ALWAYS"/>
-        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle"
-                      HBox.hgrow="ALWAYS"/>
-        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle"
-                      HBox.hgrow="ALWAYS"/>
-        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle"
-                      HBox.hgrow="ALWAYS"/>
-        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle"
-                      HBox.hgrow="ALWAYS"/>
-        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle"
-                      HBox.hgrow="ALWAYS"/>
+        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle" HBox.hgrow="ALWAYS" />
+        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle" HBox.hgrow="ALWAYS" />
+        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle" HBox.hgrow="ALWAYS" />
+        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle" HBox.hgrow="ALWAYS" />
+        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle" HBox.hgrow="ALWAYS" />
+        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle" HBox.hgrow="ALWAYS" />
+        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle" HBox.hgrow="ALWAYS" />
+        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle" HBox.hgrow="ALWAYS" />
+        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle" HBox.hgrow="ALWAYS" />
+        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle" HBox.hgrow="ALWAYS" />
+        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle" HBox.hgrow="ALWAYS" />
+        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle" HBox.hgrow="ALWAYS" />
+        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle" HBox.hgrow="ALWAYS" />
+        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle" HBox.hgrow="ALWAYS" />
+        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle" HBox.hgrow="ALWAYS" />
+        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle" HBox.hgrow="ALWAYS" />
+        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle" HBox.hgrow="ALWAYS" />
+        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle" HBox.hgrow="ALWAYS" />
+        <ToggleButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="text-toggle" HBox.hgrow="ALWAYS" />
       </children>
     </HBox>
-    <AutocompleteTextField fx:id="tagsTextField" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+    <AutocompleteTextField fx:id="tagsTextField" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+      <SearchableListView fx:id="searchListView" GridPane.columnIndex="1" GridPane.rowIndex="3" />
   </children>
   <padding>
-    <Insets left="5.0" right="5.0"/>
+    <Insets left="5.0" right="5.0" />
   </padding>
   <stylesheets>
-    <URL value="@../css/main.css"/>
-    <URL value="@../css/scrollbar.css"/>
+    <URL value="@../css/main.css" />
+    <URL value="@../css/scrollbar.css" />
   </stylesheets>
 </GridPane>

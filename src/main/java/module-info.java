@@ -2,6 +2,8 @@ module fxnotes {
   requires javafx.controls;
   requires javafx.fxml;
   
+  requires fxcontrols;
+  
   requires static lombok;
   requires static com.fasterxml.jackson.databind;
   requires static com.fasterxml.jackson.annotation;
@@ -12,6 +14,5 @@ module fxnotes {
   
   exports cz.stroym.fxnotes to javafx.graphics;
   exports cz.stroym.fxnotes.controller;
-  exports cz.stroym.controls;
   
 }

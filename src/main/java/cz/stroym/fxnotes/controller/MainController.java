@@ -1,6 +1,6 @@
 package cz.stroym.fxnotes.controller;
 
-import cz.stroym.controls.AutocompleteTextField;
+import cz.stroym.fxcontrols.control.SearchableListView;
 import cz.stroym.fxnotes.model.Note;
 import cz.stroym.fxnotes.model.Notebook;
 import cz.stroym.fxnotes.model.Section;
@@ -23,6 +23,7 @@ import javafx.util.StringConverter;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Random;
 
 public class MainController {
   
@@ -47,7 +48,7 @@ public class MainController {
   private ListView<Tag>     tagsView;
   
   @FXML
-  private AutocompleteTextField<String> tagsTextField;
+  private SearchableListView<String> searchListView;
   
   @FXML
   private TextArea noteTextArea;
@@ -59,8 +60,20 @@ public class MainController {
     notesView.setItems(notebook.getDefaultSection().getObservableNotes());
     tagsView.setItems(notebook.getObservableTags());
     
-    tagsTextField.getEntries().addAll(Arrays.asList("bob", "blob", "ahoj", "beep boop"));
+    Random r = new Random();
     
+    
+    searchListView.getItems().addAll(
+        Arrays.asList(r.nextInt() + "", r.nextInt() + "", r.nextInt() + "", r.nextInt() + "", r.nextInt() + "",
+                      r.nextInt() + "", r.nextInt() + "", r.nextInt() + "", r.nextInt() + "", r.nextInt() + "",
+                      r.nextInt() + "", r.nextInt() + "", r.nextInt() + "", r.nextInt() + "", r.nextInt() + "",
+                      r.nextInt() + "", r.nextInt() + "", r.nextInt() + "", r.nextInt() + "", r.nextInt() + "",
+                      r.nextInt() + "", r.nextInt() + "", r.nextInt() + "", r.nextInt() + "", r.nextInt() + "",
+                      r.nextInt() + "", r.nextInt() + "", r.nextInt() + "", r.nextInt() + "", r.nextInt() + "",
+                      r.nextInt() + "", r.nextInt() + "", r.nextInt() + "", r.nextInt() + "", r.nextInt() + "")
+    );
+    
+    searchListView.refresh();
     // registerEmptyListViewClickConsumers();
     setupDragAndDrop();
     setupEditableListViews();
