@@ -32,11 +32,7 @@ repositories {
 
 dependencies {
   implementation group: 'org.openjfx', name: 'javafx', version: '15-ea+5', ext: 'pom'
-  implementation group: 'cz.stroym', name: 'fxcontrols', version: '0.0.2'
-
-//  implementation group: 'com.gluonhq.scenebuilder', name: 'scenebuilder-kit', version: '10.0.0'
-
-//  implementation group: 'org.controlsfx', name: 'controlsfx', version: '11.0.1'
+  implementation group: 'cz.stroym', name: 'fxcontrols', version: '0.1.1'
 
   implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.11.0'
   implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.0'

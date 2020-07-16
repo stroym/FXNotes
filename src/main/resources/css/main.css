@@ -16,9 +16,7 @@
 }
 
 .hide-toggle-button{
-  -fx-background-color: transparent;
   -fx-padding: 0px;
-  -fx-border-color: black;
 }
 
 .auto-complete-text-field{

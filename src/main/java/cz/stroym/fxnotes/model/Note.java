@@ -13,13 +13,17 @@ import java.util.TreeSet;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class Note extends Base {
+public class Note extends UserOrderableBase {
   
   private String  content  = "";
-  private long    userOrder;
   private boolean archived = false;
+  
+  public Note(long id, String value, long userOrder, String content, boolean archived, NOTE_STATE state) {
+    super(id, value, userOrder);
+    this.content = content;
+    this.archived = archived;
+    this.state = state;
+  }
   
   @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
   @JsonIdentityReference(alwaysAsId = true)
@@ -33,7 +37,7 @@ public class Note extends Base {
     tags.add(tag);
   }
   
-  public void removeTag(Tag tag) {
+  public void untag(Tag tag) {
     tags.remove(tag);
   }
   

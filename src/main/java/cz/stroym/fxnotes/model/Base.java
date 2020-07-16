@@ -6,24 +6,27 @@ import lombok.*;
 import java.io.Serializable;
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
 public abstract class Base implements Serializable, Comparable<Base> {
-
+  
   @JsonTypeId
-  protected long id;
-
+  protected final long id;
+  
   @Setter
-  protected String value = "";
-
+  protected String value;
+  
+  public Base(long id, String value) {
+    this.id = id;
+    this.value = value;
+  }
+  
   @Override
   public int compareTo(Base o) {
     return this.value.compareTo(o.value);
   }
-
+  
   @Override
   public String toString() {
     return value;
   }
-
+  
 }

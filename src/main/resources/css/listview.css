@@ -1,0 +1,5 @@
+.list-cell:focused {
+  -fx-background-color: transparent;
+  -fx-text-fill: orange;
+  -fx-font-weight: bolder;
+}
