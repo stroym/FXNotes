@@ -1,6 +1,7 @@
 package cz.stroym.fxnotes.controller;
 
 import cz.stroym.fxcontrols.control.SearchableListView;
+import cz.stroym.fxcontrols.control.TagBox;
 import cz.stroym.fxnotes.model.Note;
 import cz.stroym.fxnotes.model.Notebook;
 import cz.stroym.fxnotes.model.Section;
@@ -9,7 +10,6 @@ import cz.stroym.fxnotes.util.DataUtils;
 import cz.stroym.fxnotes.util.DialogUtils;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -26,14 +26,11 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.util.Callback;
-import javafx.util.Pair;
 import javafx.util.StringConverter;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -57,8 +54,6 @@ public class MainController {
   private SearchableListView<Note>    notesView;
   @FXML
   private SearchableListView<Section> sectionsView;
-  @FXML
-  private SearchableListView<Tag>     tagsView;
   
   @FXML
   private ContextMenu sectionsContext;
@@ -73,22 +68,18 @@ public class MainController {
   private TextArea noteTextArea;
   
   @FXML
+  private TagBox tagBox;
+  
+  @FXML
   private void initialize() {
-    setupCellFactories();
-    
-    notesView.getSelectionModel().selectedItemProperty().addListener(
-        (observable, oldValue, newValue) -> {
-          
-          tagsView.getCellFactory().call(tagsView);
-          tagsView.refresh();
-        }
+    tagBox.setComboBoxItems(
+        FXCollections.observableArrayList(Arrays.asList("asdasdasd", "asdasddas", "asdasdsadasdggtr", "dtzjzujzujwe"))
     );
     
     //TODO init notebook from preferences when that's a thing
     FILE_CHOOSER.getExtensionFilters().add(TEXT_FILTER);
     notesView.setItems(notebook.getDEFAULT_SECTION().getObservableNotes());
     //    tagsView.setItems(notebook.getObservableTags());
-    
     
     for (int i = 0; i < 30; i++) {
       notesView.getItems().add(new Note(i, new Random().nextInt() + "", -1, "", false, Note.NOTE_STATE.NEW));
@@ -97,71 +88,25 @@ public class MainController {
     notesView.setItems(notesView.getItems().sorted());
     notesView.refresh();
     
-    tagsView.setItems(
-        FXCollections.observableArrayList(Arrays.asList(new Tag(1, "bob"), new Tag(33, "bobby"), new Tag(2, "luna")))
-    );
-
-    tagsView.setItems(tagsView.getItems().sorted());
-    tagsView.refresh();
-    
     // registerEmptyListViewClickConsumers();
-    setupDragAndDrop();
     setupEditableListViews();
   }
   
-  private void setupCellFactories() {
-    tagsView.setCellFactory(CheckBoxListCell.forListView(new Callback<Tag, ObservableValue<Boolean>>() {
-      
-      @Override
-      public ObservableValue<Boolean> call(Tag tag) {
-        BooleanProperty observable = new SimpleBooleanProperty(false);
-        
-        Note selected = notesView.getSelectedItem();
-        
-        if (selected == null) {
-          return observable;
-        }
-        
-        Set<Tag> tags = selected.getTags();
-        
-        if (tags.contains(tag)) {
-          observable.setValue(true);
-          return observable;
-        }
-        
-        observable.addListener(
-            (object, oldValue, newValue) -> {
-              if (newValue) {
-                selected.tag(tag);
-              } else {
-                selected.untag(tag);
-              }
-            }
-        );
-        
-        return observable;
-      }
-    }));
-  }
-
   private Note getSelectedNote() {
     return notesView.getSelectionModel().getSelectedItem();
   }
   
-  private Tag getSelectedTag() {
-    return tagsView.getSelectionModel().getSelectedItem();
-  }
-  
-  private void setupDragAndDrop() {
-    //copy from source to application clipboard
-    tagsView.setOnDragDetected(event -> {
-      Dragboard        db      = tagsView.startDragAndDrop(TransferMode.COPY);
-      ClipboardContent content = new ClipboardContent();
-      content.putString(tagsView.getSelectionModel().getSelectedItem().getValue());
-      db.setContent(content);
-      
-      event.consume();
-    });
+
+//  private void setupDragAndDrop() {
+//    //copy from source to application clipboard
+//    tagsView.setOnDragDetected(event -> {
+//      Dragboard        db      = tagsView.startDragAndDrop(TransferMode.COPY);
+//      ClipboardContent content = new ClipboardContent();
+//      content.putString(tagsView.getSelectionModel().getSelectedItem().getValue());
+//      db.setContent(content);
+//
+//      event.consume();
+//    });
     
     /*
     sets up accepting "drop" for noteTagsListView
@@ -204,7 +149,7 @@ public class MainController {
     //
     //      event.consume();
     //    });
-  }
+//  }
   
   @FXML
   private void noteListViewLeftClick() {
@@ -254,7 +199,7 @@ public class MainController {
   
   @FXML
   private void untagNote() {
-    getSelectedNote().untag(getSelectedTag());
+//    getSelectedNote().untag(getSelectedTag());
   }
   
   @FXML
@@ -262,10 +207,10 @@ public class MainController {
     //TODO get value from input
     notebook.addTag("");
     
-    tagsView.layout();
-    tagsView.getSelectionModel().selectLast();
-    tagsView.edit(tagsView.getSelectionModel().getSelectedIndex());
-    tagsView.scrollTo(tagsView.getSelectionModel().getSelectedIndex());
+//    tagsView.layout();
+//    tagsView.getSelectionModel().selectLast();
+//    tagsView.edit(tagsView.getSelectionModel().getSelectedIndex());
+//    tagsView.scrollTo(tagsView.getSelectionModel().getSelectedIndex());
   }
   
   @FXML

@@ -1,1 +1,4 @@
 rootProject.name = 'fxnotes'
+
+include ':fxcontrols'
+project(':fxcontrols').projectDir = new File("../FXControls")

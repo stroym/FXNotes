@@ -9,6 +9,13 @@ import lombok.Setter;
 @Setter
 public class Tag extends Base {
   
+  private String category;
+  
+  public Tag(long id, String value, String category) {
+    super(id, value);
+    this.category = category;
+  }
+  
   public Tag(long id, String value) {
     super(id, value);
   }
@@ -30,5 +37,10 @@ public class Tag extends Base {
   }
   
   //TODO tag groups for organization...
+  
+  @Override
+  public String toString() {
+    return category == null ? super.toString() : category + ":" + value;
+  }
   
 }
