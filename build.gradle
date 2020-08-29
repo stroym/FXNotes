@@ -12,11 +12,16 @@ plugins {
 allprojects {
   group = 'cz.stroym'
 
+  [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
   sourceCompatibility = JavaVersion.VERSION_11
   targetCompatibility = JavaVersion.VERSION_11
 
   dependencies {
     implementation(group: 'org.openjfx', name: 'javafx', version: '15-ea+5', ext: 'pom')
+    implementation(group: 'org.controlsfx', name: 'controlsfx', version: '11.0.2') {
+      exclude group: 'org.openjfx'
+    }
   }
 
   repositories {
@@ -40,7 +45,7 @@ repositories {
       password = '8f98a4ee38d97e44a1b7ae87f85ad36baa08f082'
     }
   }
-//  flatDir{
+//  flatDir {
 //    dirs '/home/stroym/Projects/FXControls/build/libs/'
 //  }
 }
